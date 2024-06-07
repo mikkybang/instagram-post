@@ -33,7 +33,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         database: configService.get('DATABASE_NAME'),
         entities: ['dist/**/*.entity{.ts,.js}'],
         synchronize: true,
-        ssl: Boolean(configService.get('database.ssl')),
+        ssl: Boolean(configService.get('DATABASE_SSL')),
         namingStrategy: new SnakeNamingStrategy(),
       }),
       inject: [ConfigService],
