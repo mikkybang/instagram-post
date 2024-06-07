@@ -3,7 +3,11 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+
 import { PostModule } from './post/post.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
@@ -15,6 +19,26 @@ import { PostModule } from './post/post.module';
         plugins: [ApolloServerPluginLandingPageLocalDefault()],
       }),
     }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get('DATABASE_HOST'),
+        port: +configService.get('DATABASE_PORT'),
+        username: configService.get('DATABASE_USERNAME'),
+        password: configService.get('DATABASE_PASSWORD'),
+        database: configService.get('DATABASE_NAME'),
+        entities: ['dist/**/*.entity{.ts,.js}'],
+        synchronize: true,
+        ssl: Boolean(configService.get('database.ssl')),
+        namingStrategy: new SnakeNamingStrategy(),
+      }),
+      inject: [ConfigService],
+    }),
+
     PostModule,
   ],
 })
