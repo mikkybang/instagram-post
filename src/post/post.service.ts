@@ -4,6 +4,8 @@ import { UpdatePostInput } from './dto/update-post.input';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post, PostMedia } from './entities/post.entity';
 import { Repository } from 'typeorm';
+import { PostArgs } from './dto/post.args';
+import { PaginatedPosts } from './post.models';
 
 @Injectable()
 export class PostService {
@@ -27,8 +29,19 @@ export class PostService {
     return savedPost;
   }
 
-  findAll() {
-    return [{ exampleField: 1 }];
+  async findAll(args: PostArgs): Promise<PaginatedPosts> {
+    const count = await this.postRepository.count({ where: {} });
+    const posts = await this.postRepository.find({
+      skip: args.skip,
+      take: args.take,
+    });
+    console.log(posts);
+    return {
+      totalPage: Math.ceil(count / args.take),
+      page: args.skip,
+      limit: args.take,
+      posts,
+    };
   }
 
   async findOne(id: string) {

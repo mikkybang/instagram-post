@@ -32,8 +32,15 @@ enum PostMediaType {
   Video
 }
 
-type Query {
+type PaginatedPosts {
+  totalPage: Int!
+  page: Int!
+  limit: Int!
   posts: [Post!]!
+}
+
+type Query {
+  posts(skip: Int = 0, take: Int = 10): PaginatedPosts!
   post(id: String!): Post!
 }
 

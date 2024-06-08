@@ -3,6 +3,8 @@ import { PostService } from './post.service';
 import { Post } from './entities/post.entity';
 import { CreatePostInput } from './dto/create-post.input';
 import { UpdatePostInput } from './dto/update-post.input';
+import { PostArgs } from './dto/post.args';
+import { PaginatedPosts } from './post.models';
 
 @Resolver(() => Post)
 export class PostResolver {
@@ -13,9 +15,9 @@ export class PostResolver {
     return this.postService.create(createPostInput);
   }
 
-  @Query(() => [Post], { name: 'posts' })
-  findAll() {
-    return this.postService.findAll();
+  @Query(() => PaginatedPosts, { name: 'posts' })
+  findAll(@Args() postArgs: PostArgs) {
+    return this.postService.findAll(postArgs);
   }
 
   @Query(() => Post, { name: 'post' })
