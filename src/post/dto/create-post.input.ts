@@ -1,5 +1,5 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { IsNotEmpty, IsOptional } from 'class-validator';
+import { IsArray, IsNotEmpty, IsOptional } from 'class-validator';
 import { PostMediaType } from '../post.enum';
 
 @InputType()
@@ -13,6 +13,8 @@ export class CreatePostInput {
   caption?: string;
 
   @Field(() => [PostMediaInput])
+  @IsNotEmpty()
+  @IsArray()
   media: PostMediaInput[];
 }
 
