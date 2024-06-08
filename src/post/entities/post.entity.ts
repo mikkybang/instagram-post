@@ -21,7 +21,7 @@ export class Post {
   @Field(() => String)
   userId: string;
 
-  @Column({ type: 'varchar', length: '150', nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   @Field(() => String)
   caption?: string;
 

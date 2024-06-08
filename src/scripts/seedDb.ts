@@ -2,12 +2,15 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from '../app.module';
 import { PostService } from '../post/post.service';
 import { faker } from '@faker-js/faker';
-import { PostMediaType } from 'src/post/post.enum';
+import { PostMediaType } from '../post/post.enum';
+import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
-  const app = await NestFactory.createApplicationContext(AppModule);
+  const app = await NestFactory.create(AppModule);
+
   const postService = app.get(PostService);
 
+  Logger.log('seeding data');
   for (let i = 0; i < 50; i++) {
     const randomMediaAmount = faker.number.int({ min: 1, max: 10 });
     const media = [];
@@ -23,9 +26,10 @@ async function bootstrap() {
     await postService.create({
       userId: faker.string.uuid(),
       media,
-      caption: faker.lorem.sentence({ min: 0, max: 40 }),
+      caption: faker.lorem.sentence({ min: 0, max: 20 }),
     });
   }
+  Logger.log('done seeding');
 
   await app.close();
 }

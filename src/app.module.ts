@@ -8,6 +8,7 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 import { PostModule } from './post/post.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Post, PostMedia } from './post/entities/post.entity';
 
 @Module({
   imports: [
@@ -31,10 +32,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         username: configService.get('DATABASE_USERNAME'),
         password: configService.get('DATABASE_PASSWORD'),
         database: configService.get('DATABASE_NAME'),
-        entities: ['dist/**/*.entity{.ts,.js}'],
+        entities: [Post, PostMedia],
         synchronize: true,
         ssl: Boolean(configService.get('DATABASE_SSL')),
         namingStrategy: new SnakeNamingStrategy(),
+        autoLoadEntities: true,
       }),
       inject: [ConfigService],
     }),
