@@ -5,4 +5,6 @@ export enum PostMediaType {
   Video = 'video',
 }
 
-registerEnumType(PostMediaType);
+registerEnumType(PostMediaType, {
+  name: 'PostMediaType',
+});
