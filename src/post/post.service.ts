@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreatePostInput } from './dto/create-post.input';
 import { UpdatePostInput } from './dto/update-post.input';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,23 +13,44 @@ export class PostService {
     private readonly postMediaRepository: Repository<PostMedia>,
   ) {}
 
-  create(createPostInput: CreatePostInput) {
-    return 'This action adds a new post';
+  async create(createPostInput: CreatePostInput) {
+    if (createPostInput?.media.length < 1) {
+      throw new BadRequestException('no media added to post');
+    }
+
+    const post = new Post();
+    post.userId = createPostInput.userId;
+    post.caption = createPostInput.caption;
+    post.media = createPostInput.media;
+
+    const savedPost = await this.postRepository.save(post);
+    return savedPost;
   }
 
   findAll() {
     return [{ exampleField: 1 }];
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  async findOne(id: string) {
+    const post = await this.postRepository.findOne({ where: { id } });
+    return post;
   }
 
-  update(id: number, updatePostInput: UpdatePostInput) {
-    return `This action updates a #${id} post`;
+  async update(id: string, updatePostInput: UpdatePostInput) {
+    const existingPostCount = await this.postRepository.count({
+      where: { id },
+    });
+    if (existingPostCount < 1)
+      throw new BadRequestException('Post Id is invalid');
+    await this.postRepository.update(
+      { id },
+      { caption: updatePostInput.caption },
+    );
+    const updatedPost = await this.findOne(id);
+    return updatedPost;
   }
 
-  remove(id: number) {
+  async remove(id: string) {
     return `This action removes a #${id} post`;
   }
 }
