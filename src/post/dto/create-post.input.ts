@@ -1,7 +1,26 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
+import { InputType, Field } from '@nestjs/graphql';
+import { IsNotEmpty, IsOptional } from 'class-validator';
+import { PostMediaType } from '../post.enum';
 
 @InputType()
 export class CreatePostInput {
-  @Field(() => Int, { description: 'Example field (placeholder)' })
-  exampleField: number;
+  @Field()
+  @IsNotEmpty()
+  userId: string;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  caption?: string;
+
+  @Field(() => [PostMediaInput])
+  media: PostMediaInput[];
+}
+
+@InputType()
+class PostMediaInput {
+  @Field(() => PostMediaType)
+  type: PostMediaType;
+
+  @Field(() => String)
+  url: string;
 }
