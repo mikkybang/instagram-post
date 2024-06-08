@@ -28,7 +28,7 @@ export class PostResolver {
     return this.postService.update(updatePostInput.id, updatePostInput);
   }
 
-  @Mutation(() => Post)
+  @Mutation(() => Boolean)
   removePost(@Args('id', { type: () => String }) id: string) {
     return this.postService.remove(id);
   }

@@ -33,6 +33,7 @@ export class PostService {
 
   async findOne(id: string) {
     const post = await this.postRepository.findOne({ where: { id } });
+    if (!post) throw new BadRequestException('post not found');
     return post;
   }
 
@@ -40,8 +41,7 @@ export class PostService {
     const existingPostCount = await this.postRepository.count({
       where: { id },
     });
-    if (existingPostCount < 1)
-      throw new BadRequestException('Post Id is invalid');
+    if (existingPostCount < 1) throw new BadRequestException('post not found');
     await this.postRepository.update(
       { id },
       { caption: updatePostInput.caption },
@@ -51,6 +51,11 @@ export class PostService {
   }
 
   async remove(id: string) {
-    return `This action removes a #${id} post`;
+    const existingPostCount = await this.postRepository.count({
+      where: { id },
+    });
+    if (existingPostCount < 1) throw new BadRequestException('post not found');
+    await this.postRepository.delete({ id });
+    return true;
   }
 }

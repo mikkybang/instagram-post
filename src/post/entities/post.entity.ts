@@ -60,6 +60,6 @@ export class PostMedia {
   @Field(() => String)
   postId?: string;
 
-  @ManyToOne(() => Post, (post) => post.media)
+  @ManyToOne(() => Post, (post) => post.media, { onDelete: 'CASCADE' })
   post?: Post[];
 }

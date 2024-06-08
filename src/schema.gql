@@ -40,7 +40,7 @@ type Query {
 type Mutation {
   createPost(createPostInput: CreatePostInput!): Post!
   updatePost(updatePostInput: UpdatePostInput!): Post!
-  removePost(id: String!): Post!
+  removePost(id: String!): Boolean!
 }
 
 input CreatePostInput {
