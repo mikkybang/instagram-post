@@ -3,28 +3,58 @@
 # ------------------------------------------------------
 
 type Post {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  """Post Id"""
+  id: ID!
+  userId: String!
+  caption: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  media: [PostMedia!]!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type PostMedia {
+  """Post Media Id"""
+  id: ID!
+  url: String!
+
+  """Post Media Type"""
+  type: PostMediaType!
+  postId: String!
+}
+
+enum PostMediaType {
+  Picture
+  Video
 }
 
 type Query {
   posts: [Post!]!
-  post(id: Int!): Post!
+  post(id: String!): Post!
 }
 
 type Mutation {
   createPost(createPostInput: CreatePostInput!): Post!
   updatePost(updatePostInput: UpdatePostInput!): Post!
-  removePost(id: Int!): Post!
+  removePost(id: String!): Post!
 }
 
 input CreatePostInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  userId: String!
+  caption: String
+  media: [PostMediaInput!]!
+}
+
+input PostMediaInput {
+  type: PostMediaType!
+  url: String!
 }
 
 input UpdatePostInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  id: String!
+  caption: String!
 }
