@@ -1,4 +1,4 @@
-import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
+import { ObjectType, Field, ID } from '@nestjs/graphql';
 import {
   Column,
   CreateDateColumn,
@@ -13,9 +13,6 @@ import { PostMediaType } from '../post.enum';
 @ObjectType()
 @Entity()
 export class Post {
-  @Field(() => Int, { description: 'Example field (placeholder)' })
-  exampleField: number;
-
   @PrimaryGeneratedColumn('uuid')
   @Field(() => ID, { description: 'Post Id' })
   id: string;
