@@ -1,0 +1,33 @@
+
+version: '3'
+
+services:
+  app:
+    container_name: instagram-post-app
+    build: .
+    ports:
+      - "3003:3003"
+    environment:
+      - PORT=3003
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_NAME=instagram-post
+    depends_on:
+      - db
+
+  db:
+    container_name: postgres-db
+    image: postgres:12
+    ports:
+      - "54322:5432"
+    environment:
+      POSTGRES_DB: instagram-post
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
