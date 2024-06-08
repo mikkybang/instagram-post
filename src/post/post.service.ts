@@ -35,7 +35,6 @@ export class PostService {
       skip: args.skip,
       take: args.take,
     });
-    console.log(posts);
     return {
       totalPage: Math.ceil(count / args.take),
       page: args.skip,
