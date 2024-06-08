@@ -15,12 +15,14 @@ import { PostMediaType } from '../post.enum';
 export class Post {
   @PrimaryGeneratedColumn('uuid')
   @Field(() => ID, { description: 'Post Id' })
-  id: string;
+  id?: string;
 
   @Column({ type: 'varchar', length: '50' })
+  @Field(() => String)
   userId: string;
 
-  @Column({ type: 'varchar', length: '150' })
+  @Column({ type: 'varchar', length: '150', nullable: true })
+  @Field(() => String)
   caption?: string;
 
   @CreateDateColumn()
@@ -31,9 +33,12 @@ export class Post {
   @Field(() => Date)
   updatedAt: Date;
 
-  @OneToMany(() => PostMedia, (media) => media.post, { eager: true })
-  @Field(() => PostMedia)
-  media: PostMedia;
+  @OneToMany(() => PostMedia, (media) => media.post, {
+    eager: true,
+    cascade: true,
+  })
+  @Field(() => [PostMedia])
+  media: PostMedia[];
 }
 
 @ObjectType()
@@ -41,7 +46,7 @@ export class Post {
 export class PostMedia {
   @PrimaryGeneratedColumn('uuid')
   @Field(() => ID, { description: 'Post Media Id' })
-  id: string;
+  id?: string;
 
   @Column({ type: 'varchar' })
   @Field(() => String)
@@ -53,8 +58,8 @@ export class PostMedia {
 
   @Column()
   @Field(() => String)
-  postId: string;
+  postId?: string;
 
-  @ManyToOne(() => Post)
-  post: Post[];
+  @ManyToOne(() => Post, (post) => post.media)
+  post?: Post[];
 }
